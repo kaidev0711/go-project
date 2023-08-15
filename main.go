@@ -2,9 +2,10 @@ package main
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/kaidev0711/go-project/shared"
 )
 
 // TODO: checkHealth
@@ -16,14 +17,14 @@ func routeHealth(c *gin.Context) {
 
 // TODO: Student service
 type Student struct {
-	ID       int    `json:"id"`
-	FullName string `json:"full_name"`
-	Age      int    `json:"age"`
+	ID       uuid.UUID `json:"id"`
+	FullName string    `json:"full_name"`
+	Age      int       `json:"age"`
 }
 
 var Students = []Student{
-	{ID: 1, FullName: "Tuan", Age: 22},
-	{ID: 2, FullName: "Thin", Age: 23},
+	{ID: shared.GetUuid(), FullName: "Tuan", Age: 22},
+	{ID: shared.GetUuid(), FullName: "Thin", Age: 23},
 }
 
 func routeGetStudents(c *gin.Context) {
@@ -40,7 +41,7 @@ func routePostStudent(c *gin.Context) {
 		})
 		return
 	}
-	student.ID = Students[len(Students)-1].ID + 1
+	student.ID = shared.GetUuid()
 	Students = append(Students, student)
 	c.JSON(http.StatusCreated, student)
 }
@@ -58,7 +59,8 @@ func routePutStudent(c *gin.Context) {
 		return
 	}
 
-	id, err := strconv.Atoi(c.Params.ByName("id"))
+	idString := c.Params.ByName("id")
+	id, err := shared.GetUuidByString(idString)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message_error": "Error",
@@ -71,7 +73,7 @@ func routePutStudent(c *gin.Context) {
 			studentLocal = studentElemt
 		}
 	}
-	if studentLocal.ID == 0 {
+	if studentLocal.ID == shared.GetUuidEmpty() {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message_error": "Error",
 		})
@@ -94,7 +96,8 @@ func routePutStudent(c *gin.Context) {
 
 func routeDeleteStudent(c *gin.Context) {
 	var newStudent []Student
-	id, err := strconv.Atoi(c.Params.ByName("id"))
+	idString := c.Params.ByName("id")
+	id, err := shared.GetUuidByString(idString)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message_error": "Error",
@@ -114,8 +117,8 @@ func routeDeleteStudent(c *gin.Context) {
 
 func routeGetStudent(c *gin.Context) {
 	var student Student
-
-	id, err := strconv.Atoi(c.Params.ByName("id"))
+	idString := c.Params.ByName("id")
+	id, err := shared.GetUuidByString(idString)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message_error": "Error",
@@ -127,7 +130,7 @@ func routeGetStudent(c *gin.Context) {
 			student = studentElement
 		}
 	}
-	if student.ID == 0 {
+	if student.ID == shared.GetUuidEmpty() {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message_error": "Error",
 		})
