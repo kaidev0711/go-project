@@ -1,9 +1,23 @@
 package main
 
-import "github.com/kaidev0711/go-project/api"
+import (
+	"log"
+
+	"github.com/kaidev0711/go-project/api"
+	"github.com/kaidev0711/go-project/infras/config"
+)
 
 func main() {
-	service := api.NewService()
+	var err error
 
-	service.Start()
+	err = config.StartConfig()
+	FatalError(err)
+	err = api.NewService().Start()
+	FatalError(err)
+}
+
+func FatalError(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }
