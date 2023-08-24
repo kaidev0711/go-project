@@ -6,11 +6,11 @@ import (
 )
 
 func (s *Service) GetRoutes() {
-	s.GET("/health", infra_controller.Health)
+	s.Engine.GET("/health", infra_controller.Health)
 
-	groupStudents := s.Group("students")
-	groupStudents.GET("/", students_controller.List)
-	groupStudents.POST("/", students_controller.Create)
+	groupStudents := s.Engine.Group("students")
+	groupStudents.GET("/", s.StudentController.List)
+	groupStudents.POST("/", s.StudentController.Create)
 	groupStudents.PUT("/:id", students_controller.Update)
 	groupStudents.DELETE("/:id", students_controller.Delete)
 	groupStudents.GET("/:id", students_controller.Details)

@@ -5,10 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kaidev0711/go-project/api/controller"
-	student_usecase "github.com/kaidev0711/go-project/usecase/student"
+	// student_usecase "github.com/kaidev0711/go-project/usecase/student"
 )
 
-func Create(ctx *gin.Context) {
+func (sc *StudentController) Create(ctx *gin.Context) {
 	var input Input
 
 	if err := ctx.Bind(&input); err != nil {
@@ -16,7 +16,7 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	student, err := student_usecase.Create(input.FullName, input.Age)
+	student, err := sc.StudentUsecase.Create(input.FullName, input.Age)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, controller.NewResponseMessageError(err.Error()))
 		return

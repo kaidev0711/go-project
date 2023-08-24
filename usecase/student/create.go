@@ -4,9 +4,10 @@ import (
 	"github.com/kaidev0711/go-project/entities"
 )
 
-func Create(fullName string, age int) (student entities.Student, err error) {
-	pointerStudent := entities.NewStudent(fullName, age)
-	student = pointerStudent
-	entities.Students = append(entities.Students, student)
+func (su *StudentUsecase) Create(fullName string, age int) (entities.Student, error) {
+	student := entities.NewStudent(fullName, age)
+
+	err := su.Database.StudentRepository.Create(&student)
+
 	return student, err
 }

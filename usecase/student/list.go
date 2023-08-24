@@ -2,7 +2,6 @@ package student
 
 import "github.com/kaidev0711/go-project/entities"
 
-func List() (students []entities.Student, err error) {
-	students = entities.Students
-	return students, err
+func (su *StudentUsecase) List() ([]entities.Student, error) {
+	return su.Database.StudentRepository.List()
 }
